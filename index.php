@@ -2,7 +2,10 @@
 
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
+include('showpage.php');
+include('admin/admin.php');
 include 'cfg.php';
+
 
 session_start();
 
@@ -12,38 +15,32 @@ if(!isset($user_id)){
     header('location:login.php');
 }
 
-if(empty($_GET['idp'])) {
-    $page = 1;
-} else {
-    $page = $_GET['idp'];
-}
 
-if($_GET['idp'] == 'main' or '') $page = 'html/main.html';
-if($_GET['idp'] == 'about') $page = 'html/about.html';
-if($_GET['idp'] == 'bestsellers') $page = 'html/bestsellers.html';
-if($_GET['idp'] == 'recommend') $page = 'html/recommend.html';
-if($_GET['idp'] == 'authors') $page = 'html/authors.html';
-if($_GET['idp'] == 'movies') $page = 'html/movies.html';
-if($_GET['idp'] == 'contact') $page = 'html/contact.html';
-
-if(isset($_POST['add_to_cart'])){
-
-    $product_name = $_POST['product_name'];
-    $product_price = $_POST['product_price'];
-    $product_image = $_POST['product_image'];
-    $product_quantity = $_POST['product_quantity'];
-
-    $check_cart_numbers = mysqli_query($link, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
-
-    if(mysqli_num_rows($check_cart_numbers) > 0){
-        $message[] = 'already added to cart!';
-    }else{
-        mysqli_query($link, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
-        $message[] = 'product added to cart!';
-    }
-
-}
-
+if($_GET['idp'] == 'main' or '') $page = 1;
+if($_GET['idp'] == 'about') $page = 2;
+if($_GET['idp'] == 'bestsellers') $page = 3;
+if($_GET['idp'] == 'recommend') $page = 4;
+if($_GET['idp'] == 'authors') $page = 5;
+if($_GET['idp'] == 'movies') $page = 6;
+if($_GET['idp'] == 'contact') $page = 7;
+//
+//if(isset($_POST['add_to_cart'])){
+//
+//    $product_name = $_POST['product_name'];
+//    $product_price = $_POST['product_price'];
+//    $product_image = $_POST['product_image'];
+//    $product_quantity = $_POST['product_quantity'];
+//
+//    $check_cart_numbers = mysqli_query($link, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
+//
+//    if(mysqli_num_rows($check_cart_numbers) > 0){
+//        $message[] = 'already added to cart!';
+//    }else{
+//        mysqli_query($link, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
+//        $message[] = 'product added to cart!';
+//    }
+//
+//}
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +56,6 @@ if(isset($_POST['add_to_cart'])){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <script src="js/script.js"></script>
     <script src="js/timedate.js"></script>
 </head>
 <header class="header">
@@ -84,13 +80,13 @@ if(isset($_POST['add_to_cart'])){
                 $cart_rows_number = mysqli_num_rows($select_cart_number);
                 ?>
                 <a href="cart.php"> <i class="fas fa-shopping-cart"></i> <span>(<?php echo $cart_rows_number; ?>)</span> </a>
-                <a href="login.php">login</a> <a href="register.php">register</a>
+                <a href="login.php">zaloguj</a> <a href="register.php">zarejestruj</a>
             </div>
 
             <div class="user-box">
                 <p>username : <span><?php echo $_SESSION['user_name']; ?></span></p>
                 <p>email : <span><?php echo $_SESSION['user_email']; ?></span></p>
-                <a href="logout.php" class="delete-btn">logout</a>
+                <a href="logout.php" class="delete-btn">Wyloguj</a>
             </div>
         </div>
     </div>
@@ -100,14 +96,10 @@ if(isset($_POST['add_to_cart'])){
 
 <?php
 
-if(!file_exists($page)) {
-    echo "Page {$page} doesn't exists!";
-}
-
-include($page);
+PokazPodstrone($page, $link);
 
 ?>
-
+<script src="js/script.js"></script>
 </body>
 <section class="footer">
 

@@ -25,7 +25,7 @@ if(isset($_GET['delete'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strony</title>
+    <title>Katgeorie</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_style.css">
 
@@ -57,32 +57,26 @@ if(isset($_GET['delete'])){
 <body>
 <section class="dashboard">
 
-    <h1 class="title">Strony</h1>
+    <h1 class="title">Produkty</h1>
 
     <div class="box-container">
         <div class="box">
-            <p><a href="pages/list_page.php">Lista podstron</a></p>
+            <p><a href="products/product_list.php">Lista produktów</a></p>
         </div>
         <div class="box">
-            <p><a href="pages/edit_page.php">Edytuj podstronę</a></p>
+            <p><a href="products/add_product.php">Dodaj produkt</a></p>
         </div>
         <div class="box">
-            <p><a href="pages/add_page.php">Dodaj podstronę</a></p>
+            <p><a href="products/edit_product.php">Edytuj produkt</a></p>
         </div>
         <div class="box">
-            <p><a href="pages/delete_page.php">Usuń podstronę</a></p>
+            <p><a href="products/delete_product.php">Usuń produkt</a></p>
         </div>
-<!--        <div class="box">-->
-<!--            <h2 style="font-size: 20px;color: khaki">Lista podstron</h2>-->
-<!--            --><?php
-//            ListaPodstron();
-//            ?>
-<!--        </div>-->
     </div>
 
 
 
-<script src="js/admin_script.js"></script>
+    <script src="js/admin_script.js"></script>
 
 </body>
 </html>

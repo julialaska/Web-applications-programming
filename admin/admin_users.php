@@ -40,15 +40,14 @@ if(isset($_GET['delete'])){
             <a style="color: khaki" href="admin_users.php">Użytkownicy</a>
             <a style="color: khaki" href="admin_pages.php">Strony</a>
             <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="admin_orders.php">Kategorie</a>
-            <a style="color: khaki" href="admin_contacts.php">messages</a>
+            <a style="color: khaki" href="admin_categories.php">Kategorie</a>
         </nav>
 
         <div>
             <p>username : <span><?php echo $_SESSION['admin_name']; ?></span></p>
             <p>email : <span><?php echo $_SESSION['admin_email']; ?></span></p>
             <a href="../logout.php" class="delete-btn">logout</a>
-            <div>new <a href="login.php">login</a> | <a href="register.php">register</a></div>
+            <div>new <a href="../login.php">login</a> | <a href="../register.php">register</a></div>
         </div>
 
     </div>

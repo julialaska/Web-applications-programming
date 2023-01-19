@@ -35,18 +35,14 @@ if(!isset($admin_id)){
             <a style="color: khaki" href="admin_users.php">Użytkownicy</a>
             <a style="color: khaki" href="admin_pages.php">Strony</a>
             <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="admin_orders.php">Kategorie</a>
-            <a style="color: khaki" href="admin_contacts.php">Wiadomosci</a>
+            <a style="color: khaki" href="admin_categories.php">Kategorie</a>
         </nav>
 
-        <br>
         <div>
-            <p>username : <?php echo $_SESSION['admin_name']; ?></p>
-            <p>email : <?php echo $_SESSION['admin_email']; ?></p>
-            <a href="../logout.php" class="delete-btn">Wyloguj</a>
-            <div>new <a href="login.php">login</a> <a href="register.php">register</a></div>
-        </div>
-
+            <p>username : <span><?php echo $_SESSION['admin_name']; ?></span></p>
+            <p>email : <span><?php echo $_SESSION['admin_email']; ?></span></p>
+            <a href="../logout.php" class="delete-btn">logout</a>
+            <div>new <a href="../login.php">login</a> | <a href="../register.php">register</a></div>
         </div>
 
     </div>
@@ -62,7 +58,7 @@ if(!isset($admin_id)){
 
         <div class="box">
             <?php
-            $select_products = mysqli_query($link, "SELECT * FROM `products`") or die('query failed');
+            $select_products = mysqli_query($link, "SELECT * FROM `product_list`") or die('query failed');
             $number_of_products = mysqli_num_rows($select_products);
             ?>
             <h3><?php echo $number_of_products; ?></h3>
@@ -104,6 +100,16 @@ if(!isset($admin_id)){
             <h3><?php echo $number_of_messages; ?></h3>
             <p>Wiadomości</p>
         </div>
+        <div class="box">
+            <?php
+            $select_pages = mysqli_query($link, "SELECT * FROM `page_list`") or die('query failed');
+            $number_of_pages = mysqli_num_rows($select_pages);
+            ?>
+            <h3><?php echo $number_of_pages; ?></h3>
+            <p><a href="admin_pages.php">Strony</a></p>
+        </div>
+
+
 
     </div>
 

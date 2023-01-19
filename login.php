@@ -24,13 +24,13 @@ session_start();
 
 // sprawdzenie czy został przesłany formularz logowania
 if(isset($_POST['submit'])){
+
 //   mysqli_real_escape_string jest to funkcja pozwalająca na zabezpieczenie ciągów znaków
 // przed nieprawidłowymi znakami, przed atakami typu SQL injection
-
    $email = mysqli_real_escape_string($link, $_POST['email']);
    $pass = mysqli_real_escape_string($link, md5($_POST['password']));
 
-//  pobranie danych z bazy dla podanego emaila i hasła
+//  pobranie danych z bazy dla podanego maila i hasła
    $select_users = mysqli_query($link, "SELECT * FROM `users` WHERE email = '$email' AND password = '$pass'") or die('query failed');
 
    if(mysqli_num_rows($select_users) > 0){
@@ -55,13 +55,13 @@ if(isset($_POST['submit'])){
 
    }else{
 // ustawienie komunikatu o błędnym mailu lub haśle
-      $message[] = 'incorrect email or password!';
+      $message[] = 'niepoprawne dane logowania';
    }
 
 }
 else{
 
-//    jeśli formularz nie został jeszcze wysłany, wywołanie funkcji z formularzem logowania
+//  jeśli formularz nie został jeszcze wysłany, wywołanie funkcji z formularzem logowania
     echo FormularzLogowania();
 }
 

@@ -5,8 +5,8 @@ $dbuser = 'root';
 $dbpass = '';
 $baza = 'moja_strona';
 
-$admin_email = 'julkalas101@gmail.com';
-$admin_pass = 'julia';
+$login = 'admin';
+$pass = 'admin';
 
 $link = mysqli_connect($dbhost, $dbuser, $dbpass, $baza);
 

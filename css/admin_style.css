@@ -263,7 +263,7 @@ section{
 
 .dashboard .box-container .box h3{
    font-size: 5rem;
-   color:var(--black); 
+   color:var(--black);
 }
 
 .dashboard .box-container .box p{
@@ -380,49 +380,6 @@ section{
    font-size: 1.8rem;
    color:var(--black);
    width: 100%;
-}
-
-.orders .box-container{
-   display: grid;
-   grid-template-columns: repeat(auto-fit, 30rem);
-   justify-content: center;
-   gap:1.5rem;
-   max-width: 1200px;
-   margin:0 auto;
-   align-items: flex-start;
-}
-
-.orders .box-container .box{
-   background-color: var(--white);
-   padding:2rem;
-   border:var(--border);
-   box-shadow: var(--box-shadow);
-   border-radius: .5rem;
-}
-
-.orders .box-container .box p{
-   padding-bottom: 1rem;
-   font-size: 2rem;
-   color:var(--light-color);
-}
-
-.orders .box-container .box p span{
-   color:var(--purple);
-}
-
-.orders .box-container .box form{
-   text-align: center;
-}
-
-.orders .box-container .box form select{
-   border-radius: .5rem;
-   margin:.5rem 0;
-   width: 100%;
-   background-color: var(--light-bg);
-   border:var(--border);
-   padding:1.2rem 1.4rem;
-   font-size: 1.8rem;
-   color:var(--black);
 }
 
 .users .box-container{

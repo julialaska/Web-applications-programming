@@ -1,6 +1,19 @@
 <?php
 include('cfg.php');
 
+function PokazKomunikat($message){
+    if(isset($message)){
+        foreach($message as $message){
+            echo '
+      <div class="message">
+         <span>'.$message.'</span>
+         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+      </div>
+      ';
+        }
+    }
+}
+
 // funkcja zwracająca formularz logowania
 function FormularzLogowania(){
         return '
@@ -38,8 +51,16 @@ function EdytujPodstrone(){
 
     $form = '
     <form action="" method="post">
-     <p style="size: 1rem">Wybierz id podstrony:</p><br>
-        <input type="number" name="id" id="id" required>
+        <label for="id">Wybierz podstronę:</label>
+        <select name="id" id="id">
+            <?php
+            $query = "SELECT id, page_title FROM page_list";
+            $result = mysqli_query($link, $query);
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<option value=" . "$row["id"]". ">" . "$row["page_title"]" . "</option>";
+            }
+            ?>
+        </select>
 
         <p style="size: 1rem">Tytuł podstrony:</p><br>
         <input type="text" name="page_title" id="page_title" required>
@@ -69,7 +90,9 @@ function EdytujPodstrone(){
             // zapytanie SQL edytujące stronę o podanym id
             $query = "UPDATE page_list SET page_title='$page_title', page_content='$page_content', status='$status' WHERE id='$id' LIMIT 1";
             mysqli_query($link, $query) or die(mysqli_error($link));
+            $message[] = 'Udana edycja';
         }
+        PokazKomunikat($message);
     }
     $_POST['id'] = null;
     $_POST['page_content'] = null;
@@ -77,17 +100,6 @@ function EdytujPodstrone(){
     $_POST['status'] = null;
     $_POST['submit'] = null;
 
-// wyświetlenie wiadomości jeśli została ustawiona
-    if(isset($message)){
-        foreach($message as $message){
-            echo '
-      <div class="message">
-         <span>'.$message.'</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-      </div>
-      ';
-        }
-    }
         echo $form;
 }
 
@@ -100,7 +112,7 @@ function DodajNowaPodstrone(): void
     <form action="" method="post">
 
         <p style="size: 1rem">Tytuł podstrony:</p><br>
-        <input type="text" name="page_title" id="page_title" required>
+        <input type="text" name="page_title" id="page_title">
 
         <p style="size: 1rem">Treść podstrony:</p><br>
         <textarea name="page_content" id="page_content" required></textarea>
@@ -116,33 +128,25 @@ function DodajNowaPodstrone(): void
 // pobranie danych z formularza
         $page_title = $_POST['page_title'];
         $page_content = $_POST['page_content'];
-        $status = isset($_POST['status']) ? $_POST['status'] : 0;
+        $status = $_POST['status'] ?? 0;
 
 // sprzwadzenie czy której z pól nie pozostało puste
         if(empty($page_title) || empty($page_content) || !is_numeric($status)){
             $message[] = 'Wszystkie pola są wymagane';
         }
+        else {
 // zapytanie SQL dodający stronę
-        $query = "INSERT INTO page_list SET id=NULL, page_title = '$page_title', page_content = '$page_content', status = '$status'";
-        mysqli_query($link, $query) or die(mysqli_error($link));
-
+            $query = "INSERT INTO page_list SET id=NULL, page_title = '$page_title', page_content = '$page_content', status = '$status'";
+            mysqli_query($link, $query) or die(mysqli_error($link));
+            $message[] = 'Udane dodawanie strony';
+        }
+        PokazKomunikat($message);
     }
     $_POST['id'] = null;
     $_POST['page_content'] = null;
     $_POST['page_title'] = null;
     $_POST['status'] = null;
 
-    // wyświetlenie wiadomości jeśli została ustawiona
-    if(isset($message)){
-        foreach($message as $message){
-            echo '
-      <div class="message">
-         <span>'.$message.'</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-      </div>
-      ';
-        }
-    }
 
     echo $form;
 
@@ -164,10 +168,23 @@ function UsunPodstrone() {
     if(isset($_POST['submit'])) {
         $id = $_POST['id'];
 
-            // zapytanie SQL usuwające podstronę
+//  sprawdzenie, czy rekord o danym id istnieje w bazie danych
+        $query = "SELECT * FROM page_list WHERE id = '$id'";
+        $result = mysqli_query($link, $query);
+//  sprawdzenie liczby wyników, jeśli ich liczba jest większa niż zero, rekord istnieje i zostaje usunięty z bazy
+        if (mysqli_num_rows($result) <= 0) {
+            $message[] = 'Strona o podanym id nie istnieje';
+        }
+        else {
+
             $query = "DELETE FROM page_list WHERE id = '$id'";
             mysqli_query($link, $query);
+// po usunięciu link przekierowujący z powrotem na podgląd podstron
+//        header('location:../admin_pages.php');
+            $message[] = 'Udane usuwanie';
 
+        }
+        PokazKomunikat($message);
     }
     $_POST['id'] = null;
 
@@ -382,7 +399,6 @@ function DodajNowyProdukt(): void
 
     if(isset($_POST['submit'])) {
 // pobranie danych z formularza
-        $tytul = $_POST['tytul'];
         $opis = $_POST['opis'];
         $data_utworzenia = $_POST['data_utworzenia'];
         $data_modyfikacji = $_POST['data_modyfikacji'];
@@ -394,10 +410,8 @@ function DodajNowyProdukt(): void
         $kategoria = $_POST['kategoria'];
         $gabaryt = $_POST['gabaryt'];
 
-        $nazwa = mysqli_real_escape_string($link, $_POST['tytul']);
-        $zdjecie = $_FILES['zdjecie']['nazwa'];
-        $tmp = $_FILES['zdjecie']['tmp'];
-        $zdjecia_folder = 'uploaded_img/' . $zdjecie;
+        $tytul = mysqli_real_escape_string($link, $_POST['tytul']);
+        $zdjecie = $_FILES['zdjecie']['tmp_name'];
 
 
 // sprzwadzenie czy której z pól nie pozostało puste
@@ -411,9 +425,9 @@ function DodajNowyProdukt(): void
 			'$cena_netto', '$podatek_vat', '$ilosc', '$status_dostepnosci', '$kategoria', '$gabaryt', '$zdjecie');");
 //            mysqli_query($link, $query) or die(mysqli_error($link));
 
-            move_uploaded_file($tmp, $zdjecia_folder);
             $message[] = 'produkt dodany';
         }
+        mysqli_close($link);
     }
 
         // wyświetlenie wiadomości jeśli została ustawiona

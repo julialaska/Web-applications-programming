@@ -23,24 +23,24 @@ if($_GET['idp'] == 'recommend') $page = 4;
 if($_GET['idp'] == 'authors') $page = 5;
 if($_GET['idp'] == 'movies') $page = 6;
 if($_GET['idp'] == 'contact') $page = 7;
-//
-//if(isset($_POST['add_to_cart'])){
-//
-//    $product_name = $_POST['product_name'];
-//    $product_price = $_POST['product_price'];
-//    $product_image = $_POST['product_image'];
-//    $product_quantity = $_POST['product_quantity'];
-//
-//    $check_cart_numbers = mysqli_query($link, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
-//
-//    if(mysqli_num_rows($check_cart_numbers) > 0){
-//        $message[] = 'already added to cart!';
-//    }else{
-//        mysqli_query($link, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
-//        $message[] = 'product added to cart!';
-//    }
-//
-//}
+if($_GET['idp'] == 'shop') $page = 8;
+
+if(isset($_POST['add_to_cart'])){
+
+    $product_name = $_POST['product_name'];
+    $product_price = $_POST['product_price'];
+    $product_image = $_POST['product_image'];
+    $product_quantity = $_POST['product_quantity'];
+
+    $check_cart_numbers = mysqli_query($link, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
+
+    if(mysqli_num_rows($check_cart_numbers) > 0){
+        $message[] = 'already added to cart!';
+    }else{
+        mysqli_query($link, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
+        $message[] = 'product added to cart!';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +70,7 @@ if($_GET['idp'] == 'contact') $page = 7;
                 <a style="color: #1a1201" href="?idp=recommend">Polecenia</a>
                 <a style="color: #1a1201" href="?idp=authors">Autorzy</a>
                 <a style="color: #1a1201" href="?idp=movies">Filmy</a>
+                <a style="color: #1a1201" href="admin/shop.php">Sklep</a>
                 <a style="color: #1a1201" href="?idp=contact">Kontakt</a>
             </nav>
 
@@ -79,7 +80,7 @@ if($_GET['idp'] == 'contact') $page = 7;
                 $select_cart_number = mysqli_query($link, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
                 $cart_rows_number = mysqli_num_rows($select_cart_number);
                 ?>
-                <a href="cart.php"> <i class="fas fa-shopping-cart"></i> <span>(<?php echo $cart_rows_number; ?>)</span> </a>
+                <a href="admin/cart.php"> <i class="fas fa-shopping-cart"></i> <span>(<?php echo $cart_rows_number; ?>)</span> </a>
                 <a href="login.php">zaloguj</a> <a href="register.php">zarejestruj</a>
                 <a class="fa fa-comment" href="contact_page.php"></a>
             </div>

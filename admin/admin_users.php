@@ -46,8 +46,8 @@ if(isset($_GET['delete'])){
         <div>
             <p>username : <span><?php echo $_SESSION['admin_name']; ?></span></p>
             <p>email : <span><?php echo $_SESSION['admin_email']; ?></span></p>
-            <a href="../logout.php" class="delete-btn">logout</a>
-            <div>new <a href="../login.php">login</a> | <a href="../register.php">register</a></div>
+            <a href="../logout.php" class="delete-btn">Wyloguj</a>
+            <div>new <a href="../login.php">Zaloguj</a> | <a href="../register.php">Zarejestruj</a></div>
         </div>
 
     </div>
@@ -56,7 +56,7 @@ if(isset($_GET['delete'])){
 <body>
 <section class="users">
 
-   <h1 class="title"> user accounts </h1>
+   <h1 class="title"> Założone konta </h1>
 
    <div class="box-container">
       <?php
@@ -64,11 +64,11 @@ if(isset($_GET['delete'])){
          while($fetch_users = mysqli_fetch_assoc($select_users)){
       ?>
       <div class="box">
-         <p> user id : <span><?php echo $fetch_users['id']; ?></span> </p>
-         <p> username : <span><?php echo $fetch_users['name']; ?></span> </p>
+         <p>  id : <span><?php echo $fetch_users['id']; ?></span> </p>
+         <p> nazwa : <span><?php echo $fetch_users['name']; ?></span> </p>
          <p> email : <span><?php echo $fetch_users['email']; ?></span> </p>
-         <p> user type : <span style="color:<?php if($fetch_users['user_type'] == 'admin'){ echo 'var(--orange)'; } ?>"><?php echo $fetch_users['user_type']; ?></span> </p>
-         <a href="admin_users.php?delete=<?php echo $fetch_users['id']; ?>" onclick="return confirm('delete this user?');" class="delete-btn">delete user</a>
+         <p> typ : <span style="color:<?php if($fetch_users['user_type'] == 'admin'){ echo 'var(--orange)'; } ?>"><?php echo $fetch_users['user_type']; ?></span> </p>
+         <a href="admin_users.php?delete=<?php echo $fetch_users['id']; ?>" onclick="return confirm('delete this user?');" class="delete-btn">Usuń</a>
       </div>
       <?php
          };

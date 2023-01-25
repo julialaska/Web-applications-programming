@@ -10,7 +10,6 @@ $admin_id = $_SESSION['admin_id'];
 if(!isset($admin_id)){
     header('location:../login.php');
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -24,32 +23,10 @@ if(!isset($admin_id)){
     <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
-<header class="header">
-
-    <div class="flex">
-
-        <a href="admin_page.php" class="logo">Admin<span>Panel</span></a>
-
-        <nav class="navbar">
-            <a style="color: khaki" href="admin_page.php">Główna</a>
-            <a style="color: khaki" href="admin_users.php">Użytkownicy</a>
-            <a style="color: khaki" href="admin_pages.php">Strony</a>
-            <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="admin_categories.php">Kategorie</a>
-        </nav>
-
-        <div>
-            <p>username : <span><?php echo $_SESSION['admin_name']; ?></span></p>
-            <p>email : <span><?php echo $_SESSION['admin_email']; ?></span></p>
-            <a href="../logout.php" class="delete-btn">logout</a>
-            <div>new <a href="../login.php">login</a> | <a href="../register.php">register</a></div>
-        </div>
-
-    </div>
-
-</header>
 <body>
-
+<?php
+include "admin_header.php";
+?>
 <section class="dashboard">
 
     <h1 class="title">Panel główny</h1>
@@ -58,20 +35,11 @@ if(!isset($admin_id)){
 
         <div class="box">
             <?php
-            $select_products = mysqli_query($link, "SELECT * FROM `product_list`") or die('query failed');
-            $number_of_products = mysqli_num_rows($select_products);
-            ?>
-            <h3><?php echo $number_of_products; ?></h3>
-            <p>Produkty</p>
-        </div>
-
-        <div class="box">
-            <?php
             $select_users = mysqli_query($link, "SELECT * FROM `users` WHERE user_type = 'user'") or die('query failed');
             $number_of_users = mysqli_num_rows($select_users);
             ?>
             <h3><?php echo $number_of_users; ?></h3>
-            <p>Użytkownicy</p>
+            <p><a href="admin_users.php">Użytkownicy</a></p>
         </div>
 
         <div class="box">
@@ -94,14 +62,6 @@ if(!isset($admin_id)){
 
         <div class="box">
             <?php
-            $select_messages = mysqli_query($link, "SELECT * FROM `message`") or die('query failed');
-            $number_of_messages = mysqli_num_rows($select_messages);
-            ?>
-            <h3><?php echo $number_of_messages; ?></h3>
-            <p>Wiadomości</p>
-        </div>
-        <div class="box">
-            <?php
             $select_pages = mysqli_query($link, "SELECT * FROM `page_list`") or die('query failed');
             $number_of_pages = mysqli_num_rows($select_pages);
             ?>
@@ -109,8 +69,22 @@ if(!isset($admin_id)){
             <p><a href="admin_pages.php">Strony</a></p>
         </div>
 
-
-
+        <div class="box">
+            <?php
+            $select_pages = mysqli_query($link, "SELECT * FROM `product_list`") or die('query failed');
+            $number_of_pages = mysqli_num_rows($select_pages);
+            ?>
+            <h3><?php echo $number_of_pages; ?></h3>
+            <p><a href="admin_products.php">Produkty</a></p>
+        </div>
+        <div class="box">
+            <?php
+            $select_pages = mysqli_query($link, "SELECT * FROM `category_list`") or die('query failed');
+            $number_of_pages = mysqli_num_rows($select_pages);
+            ?>
+            <h3><?php echo $number_of_pages; ?></h3>
+            <p><a href="admin_categories.php">Kategorie</a></p>
+        </div>
     </div>
 
 </section>

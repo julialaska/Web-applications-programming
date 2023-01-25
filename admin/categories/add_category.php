@@ -2,7 +2,7 @@
 
 include '../cfg.php';
 include '../admin.php';
-
+require_once '../classes/Category.php';
 session_start();
 
 $admin_id = $_SESSION['admin_id'];
@@ -10,6 +10,9 @@ $admin_id = $_SESSION['admin_id'];
 if(!isset($admin_id)){
     header('location:../login.php');
 }
+global $link;
+
+$category = new Category($link);
 
 ?>
 
@@ -24,44 +27,30 @@ if(!isset($admin_id)){
     <link rel="stylesheet" href="../../css/admin_style.css">
 
 </head>
-<header class="header">
-
-    <div class="flex">
-
-        <a href="../admin_page.php" class="logo">Admin<span>Panel</span></a>
-
-        <nav class="navbar">
-            <a style="color: khaki" href="../admin_page.php">Główna</a>
-            <a style="color: khaki" href="../admin_users.php">Użytkownicy</a>
-            <a style="color: khaki" href="../admin_pages.php">Strony</a>
-            <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="../admin_categories.php">Kategorie</a>
-        </nav>
-
-        <br>
-        <div>
-            <p>username : <?php echo $_SESSION['admin_name']; ?></p>
-            <p>email : <?php echo $_SESSION['admin_email']; ?></p>
-            <a href="../../logout.php" class="delete-btn">Wyloguj</a>
-            <div>new <a href="../../login.php">login</a> | <a href="../../register.php">register</a></div>
-        </div>
-
-    </div>
-
-    </div>
-
-</header>
 <body>
-
+<?php
+include "../pages_header.html";
+?>
 <section class="dashboard">
 
     <h1 class="title">Dodawanie kategorii</h1>
-
+    <a href="../admin_categories.php" class="white-btn">Wstecz</a>
     <div class="box-container">
 
         <div class="box">
+            <form action="" method="post">
+
+                <p style="size: 1rem">Nazwa kategorii/podkategorii:</p><br>
+                <input type="text" name="nazwa" id="nazwa">
+
+                <p style="size: 1rem">ID matki podkategorii</p><br>
+                <input type="text" name="matka" id="matka" value="1"><br>
+
+                <input class="white-btn" type="submit" name="submit" value="Dodaj">
+            </form>
+
             <?php
-            DodajNowaKategorie();
+            echo $category->dodajKategorie();
             ?>
         </div>
     </div>

@@ -2,7 +2,7 @@
 
 include '../cfg.php';
 include '../admin.php';
-
+require_once '../classes/Page.php';
 session_start();
 
 $admin_id = $_SESSION['admin_id'];
@@ -10,7 +10,9 @@ $admin_id = $_SESSION['admin_id'];
 if(!isset($admin_id)){
     header('location:../login.php');
 }
+global $link;
 
+$page = new Page($link);
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +38,21 @@ if(!isset($admin_id)){
     <div class="box-container">
 
         <div class="box">
+            <form action="" method="post">
+
+                <p style="size: 1rem">Tytuł podstrony:</p><br>
+                <input type="text" name="page_title" id="page_title">
+
+                <p style="size: 1rem">Treść podstrony:</p><br>
+                <textarea name="page_content" id="page_content" required></textarea>
+
+                <p style="size: 1rem">Aktywna</p><br>
+                <input type="checkbox" name="status" id="status" value="1"><br>
+
+                <input class="white-btn" type="submit" name="submit" value="Dodaj">
+            </form>
             <?php
-                DodajNowaPodstrone();
+                $page->dodajStrone();
                 ?>
         </div>
     </div>

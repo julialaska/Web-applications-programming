@@ -5,33 +5,52 @@ include 'cfg.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
-
+// jeżeli zmienna user_id nie jest ustawiona, tzn użytkownik nie jest zalogowany
 if(!isset($user_id)){
+    // nastąpi przekierowanie do strony z logowaniem
     header('location:login.php');
 }
-
+// sprawdzenie czy formularz z update_cart został przesłany
 if(isset($_POST['update_cart'])){
+    // pobranie danych z formularza
     $cart_id = $_POST['cart_id'];
     $cart_quantity = $_POST['cart_quantity'];
+    // zaktualizowanie ilości produktu w koszyku w bazie danych
     mysqli_query($link, "UPDATE `cart` SET quantity = '$cart_quantity' WHERE id = '$cart_id'") or die('query failed');
-    $message[] = 'cart quantity updated!';
+    // wysłanie komunikatu o aktualizacji
+    $message[] = 'Zaktualizowano ilość produktu!';
 }
-
+// sprawdzanie, czy formularz z delete(dla jednego produktu) został przesłany
 if(isset($_GET['delete'])){
+    // pobranie ID produktu do usunięcia
     $delete_id = $_GET['delete'];
+    // usuwanie produktu z koszyka w bazie danych
     mysqli_query($link, "DELETE FROM `cart` WHERE id = '$delete_id'") or die('query failed');
+    // przekierowanie do strony koszyka
     header('location:cart.php');
 }
-
+// sprawdzanie, czy formularz z delete_all(usuń wszystkie produkty) został przesłany
 if(isset($_GET['delete_all'])){
+    // usuwanie wszystkich produktów z koszyka dla danego użytkownika w bazie danych
     mysqli_query($link, "DELETE FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
+    // przekierowanie do strony koszyka
     header('location:cart.php');
 }
-
+// sprawdzanie, czy została ustawiona zmienna message, po czym wyświetlenie wiadomości
+if(isset($message)){
+    foreach($message as $message){
+        echo '
+      <div class="message">
+         <span>'.$message.'</span>
+         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+      </div>
+      ';
+    }
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,7 +58,6 @@ if(isset($_GET['delete_all'])){
     <title>Koszyk</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
-
 </head>
 <body>
 
@@ -55,41 +73,53 @@ if(isset($_GET['delete_all'])){
 
     <div class="box-container">
         <?php
-        $grand_total = 0;
+        $total_sum = 0;
+        // pobranie danych produktów z koszyka z bazy danych
         $select_cart = mysqli_query($link, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
+        // sprawdzenie czy w koszyku są jakieś produkty
         if(mysqli_num_rows($select_cart) > 0){
+            // pętla wyświetlająca informacje o produktach z koszyka
             while($fetch_cart = mysqli_fetch_assoc($select_cart)){
                 ?>
                 <div class="box">
-                    <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="fas fa-times" onclick="return confirm('delete this from cart?');"></a>
-                    <img src="uploaded_img/<?php echo $fetch_cart['image']; ?>" alt="">
+                    <!-- usunięcie produktu z koszyka z danym id z wyświetlanym zapytaniem -->
+                    <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="fas fa-times" onclick="return confirm('Usunąć produkt z koszyka?');"></a>
+                    <!-- wyświetlenie zdjęcia produktu -->
+                    <img src="../images/<?php echo $fetch_cart['image']; ?>" alt="">
+                    <!-- wyświetlanie nazwy produktu -->
                     <div class="name"><?php echo $fetch_cart['name']; ?></div>
+                    <!-- wyświetlanie ceny produktu -->
                     <div class="price"><?php echo $fetch_cart['price']; ?>PLN</div>
+                    <!-- formularz do aktualizacji ilości produktów w koszyku -->
                     <form action="" method="post">
                         <input type="hidden" name="cart_id" value="<?php echo $fetch_cart['id']; ?>">
                         <input type="number" min="1" name="cart_quantity" value="<?php echo $fetch_cart['quantity']; ?>">
-                        <input type="submit" name="update_cart" value="update" class="option-btn">
+                        <input type="submit" name="update_cart" value="Aktualizuj" class="option-btn">
                     </form>
-                    <div class="sub-total"> sub total : <span>$<?php echo $sub_total = ($fetch_cart['quantity'] * $fetch_cart['price']); ?>/-</span> </div>
+                    <!-- wyświetlenie sumy ceny produktów w koszyku razy wybrana ilość -->
+                    <div class="sub-total"> Suma produktu : <span><?php echo $product_sum = ($fetch_cart['quantity'] * $fetch_cart['price']); ?>PLN</span> </div>
                 </div>
                 <?php
-                $grand_total += $sub_total;
+                // zsumowanie sum cen produktów
+                $total_sum += $product_sum;
             }
         }else{
-            echo '<p class="empty">your cart is empty</p>';
+            // wyswietlenie komunikatu o pustym koszyku
+            echo '<p class="empty">Twój koszyk jest pusty</p>';
         }
         ?>
     </div>
-
+<!-- przycisk usuwający wszystkie produkty z koszyka, jeżeli koszyk jest pusty przycik nie bedzie widoczny-->
     <div style="margin-top: 2rem; text-align:center;">
-        <a href="cart.php?delete_all" class="delete-btn <?php echo ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from cart?');">delete all</a>
+        <a href="cart.php?delete_all" class="delete-btn <?php echo ($total_sum > 1)?'':'disabled'; ?>" onclick="return confirm('Czy chcesz usunąć wszystkie produkty z koszyka?');">Usuń wszystko</a>
     </div>
 
     <div class="cart-total">
-        <p>Suma : <span><?php echo $grand_total; ?>PLN</span></p>
+        <p>Suma : <span><?php echo $total_sum; ?>PLN</span></p>
         <div class="flex">
             <a href="shop.php" class="option-btn">Kontynuuj zakupy</a>
-            <a href="checkout.php" class="btn <?php echo ($grand_total > 1)?'':'disabled'; ?>">Przejdź do płatności</a>
+<!--            opcja przejścia do płatności -->
+            <a href="checkout.php" class="btn <?php echo ($total_sum > 1)?'':'disabled'; ?>">Przejdź do płatności</a>
         </div>
     </div>
 

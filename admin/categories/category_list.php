@@ -25,54 +25,15 @@ if(!isset($admin_id)){
     <link rel="stylesheet" href="jquery.jstree.css">
 
 </head>
-<header class="header">
-
-    <div class="flex">
-
-        <a href="../admin_page.php" class="logo">Admin<span>Panel</span></a>
-
-        <nav class="navbar">
-            <a style="color: khaki" href="../admin_page.php">Główna</a>
-            <a style="color: khaki" href="../admin_users.php">Użytkownicy</a>
-            <a style="color: khaki" href="../admin_pages.php">Strony</a>
-            <a style="color: khaki" href="../admin_products.php">Produkty</a>
-            <a style="color: khaki" href="../admin_categories.php">Kategorie</a>
-        </nav>
-
-        <br>
-        <div>
-            <p>username : <?php echo $_SESSION['admin_name']; ?></p>
-            <p>email : <?php echo $_SESSION['admin_email']; ?></p>
-            <a href="../../logout.php" class="delete-btn">Wyloguj</a>
-            <div>new <a href="../../login.php">login</a> | <a href="../../register.php">register</a></div>
-        </div>
-
-    </div>
-
-    </div>
-
-</header>
 <body>
-
+<?php
+include "../pages_header.html";
+?>
 <section class="dashboard">
 
     <h1 class="title">Wyświetlanie kategorii</h1>
-
+    <a href="../admin_products.php" class="white-btn">Wstecz</a>
     <div class="box-container">
-<!--            <div id="tree-container"></div>-->
-<!---->
-<!--            <script>-->
-<!--                $(document).ready(function() {-->
-<!--                    // Inicjowanie drzewa jsTree-->
-<!--                    $('#tree-container').jstree({-->
-<!--                        'core': {-->
-<!--                            'data': --><?php //echo json_encode(GenerujDrzewoKategorii()); ?>
-<!--//                        }-->
-<!--//                    });-->
-<!--//                });-->
-<!--//            </script>-->
-
-
         <script src="jquery.js"></script>
         <script src="jquery.jstree.js"></script>
         <div class="box">

@@ -70,16 +70,16 @@ if(isset($message)){
         <?php
         $select_products = mysqli_query($link, "SELECT * FROM `product_list`") or die('query failed');
         if(mysqli_num_rows($select_products) > 0){
-            while($fetch_products = mysqli_fetch_assoc($select_products)){
+            while($row = mysqli_fetch_assoc($select_products)){
                 ?>
                 <form action="" method="post" class="box">
-                    <img class="image" src="uploaded_img/<?php echo $fetch_products['zdjecie']; ?>" alt="">
-                    <div class="name"><?php echo $fetch_products['tytul']; ?></div>
-                    <div class="price"><?php echo $fetch_products['cena_netto']; ?></div>
+                    <img class="image" src="../images/<?php echo $row['zdjecie']; ?>" alt="">
+                    <div class="name"><?php echo $row['tytul']; ?></div>
+                    <div class="price"><?php echo $row['cena_netto']; ?></div>
                     <input type="number" min="1" name="product_quantity" value="1" class="qty">
-                    <input type="hidden" name="product_name" value="<?php echo $fetch_products['tytul']; ?>">
-                    <input type="hidden" name="product_price" value="<?php echo $fetch_products['cena_netto']; ?>">
-                    <input type="hidden" name="product_image" value="<?php echo $fetch_products['zdjecie']; ?>">
+                    <input type="hidden" name="product_name" value="<?php echo $row['tytul']; ?>">
+                    <input type="hidden" name="product_price" value="<?php echo $row['cena_netto']; ?>">
+                    <input type="hidden" name="product_image" value="<?php echo $row['zdjecie']; ?>">
                     <input type="submit" value="add to cart" name="add_to_cart" class="btn">
                 </form>
                 <?php

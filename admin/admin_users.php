@@ -29,31 +29,10 @@ if(isset($_GET['delete'])){
    <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
-<header class="header">
-
-    <div class="flex">
-
-        <a href="admin_page.php" class="logo">Admin<span>Panel</span></a>
-
-        <nav class="navbar">
-            <a style="color: khaki" href="admin_page.php">Główna</a>
-            <a style="color: khaki" href="admin_users.php">Użytkownicy</a>
-            <a style="color: khaki" href="admin_pages.php">Strony</a>
-            <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="admin_categories.php">Kategorie</a>
-        </nav>
-
-        <div>
-            <p>username : <span><?php echo $_SESSION['admin_name']; ?></span></p>
-            <p>email : <span><?php echo $_SESSION['admin_email']; ?></span></p>
-            <a href="../logout.php" class="delete-btn">Wyloguj</a>
-            <div>new <a href="../login.php">Zaloguj</a> | <a href="../register.php">Zarejestruj</a></div>
-        </div>
-
-    </div>
-
-</header>
 <body>
+<?php
+include "admin_header.php";
+?>
 <section class="users">
 
    <h1 class="title"> Założone konta </h1>

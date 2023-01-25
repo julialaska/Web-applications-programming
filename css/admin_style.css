@@ -4,7 +4,7 @@
    --purple: rgb(176, 136, 75);
    --red:#c0392b;
    --orange:#f39c12;
-   --black:#333;
+   --black: #ebd9be;
    --white: rgba(73, 43, 3, 0.96);
    --light-color: #342d2d;
    --light-white:#ccc;
@@ -158,7 +158,7 @@ section{
    padding:2rem;
    justify-content: space-between;
    position: relative;
-   max-width: 80%;
+   max-width: 100%;
    margin:0 auto;
 }
  
@@ -320,10 +320,14 @@ section{
 }
 
 .show-products .box-container .box{
-   text-align: center;
    padding:2rem;
    border-radius: .5rem;
    border:var(--border);
+   box-shadow: var(--box-shadow);
+   background-color: var(--white);
+}
+
+#table-color{
    box-shadow: var(--box-shadow);
    background-color: var(--white);
 }
@@ -532,6 +536,12 @@ section{
    .header .flex .navbar a{
       margin:2rem;
       display: block;
+   }
+
+   #head{
+      margin:0 1rem;
+      font-size: 2.5rem;
+      color:var(--light-color);
    }
 
 }

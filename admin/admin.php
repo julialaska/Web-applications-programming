@@ -1,6 +1,7 @@
 <?php
 include('cfg.php');
 
+//funkcja wyświetlająca komunikat jeżeli zmienna message została ustawiona
 function PokazKomunikat($message){
     if(isset($message)){
         foreach($message as $message){
@@ -48,32 +49,6 @@ function ListaPodstron(){
 // funkcja zwracajaca formularz edycji podstrony
 function EdytujPodstrone(){
     include('cfg.php');
-
-    $form = '
-    <form action="" method="post">
-        <label for="id">Wybierz podstronę:</label>
-        <select name="id" id="id">
-            <?php
-            $query = "SELECT id, page_title FROM page_list";
-            $result = mysqli_query($link, $query);
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<option value=" . "$row["id"]". ">" . "$row["page_title"]" . "</option>";
-            }
-            ?>
-        </select>
-
-        <p style="size: 1rem">Tytuł podstrony:</p><br>
-        <input type="text" name="page_title" id="page_title" required>
-
-        <p style="size: 1rem">Treść podstrony:</p><br>
-        <textarea name="page_content" id="page_content" required></textarea><br>
-
-        <p style="size: 1rem">Aktywna</p><br>
-        <input type="checkbox" name="status" id="status" value="1"><br>
-
-        <input class="white-btn" type="submit" name="submit" value="Zapisz">
-    </form>
-    ';
 
 //  sprawdzenie czy formularz został wysłany
     if(isset($_POST['submit'])) {
@@ -147,7 +122,6 @@ function DodajNowaPodstrone(): void
     $_POST['page_title'] = null;
     $_POST['status'] = null;
 
-
     echo $form;
 
 }
@@ -156,13 +130,6 @@ function DodajNowaPodstrone(): void
 function UsunPodstrone() {
     include "cfg.php";
 
-    $form = '
-    <form action="" method="post">
-        <p style="size: 1rem">Wybierz id podstrony:</p><br>
-        <input type="text" name="id" id="id" required><br>
-        <input class="white-btn" type="submit" name="submit" value="Usuń">
-    </form>
-        ';
 
 // sprawdzenie czy formularz został wysłany
     if(isset($_POST['submit'])) {
@@ -219,84 +186,21 @@ function DodajNowaKategorie(): void
         if(empty($nazwa)){
             $message[] = 'Wszystkie pola są wymagane';
         }
+        else {
 // zapytanie SQL dodający stronę
-        $query = "INSERT INTO category_list SET id=NULL, nazwa = '$nazwa', matka = '$matka'";
-        mysqli_query($link, $query) or die(mysqli_error($link));
-
-    }
-    $_POST['id'] = null;
-    $_POST['nazwa'] = null;
-    $_POST['matka'] = null;
-
-    // wyświetlenie wiadomości jeśli została ustawiona
-    if(isset($message)){
-        foreach($message as $message){
-            echo '
-      <div class="message">
-         <span>'.$message.'</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-      </div>
-      ';
-        }
-    }
-
-    echo $form;
-
-}
-
-
-// funkcja zwracajaca formularz edycji kategorii
-function EdytujKategorie(){
-    include('cfg.php');
-
-    $form = '
-    <form action="" method="post">
-     <p style="size: 1rem">Wybierz id kategorii:</p><br>
-        <input type="number" name="id" id="id" required>
-
-        <p style="size: 1rem">Nazwa kategorii:</p><br>
-        <input type="text" name="nazwa" id="nazwa" required>
-
-        <p style="size: 1rem">Matka podkategorii:</p><br>
-        <input type="text" name="matka" id="matka"></input><br>
-
-        <input class="white-btn" type="submit" name="submit" value="Zapisz">
-    </form>
-    ';
-
-//  sprawdzenie czy formularz został wysłany
-    if(isset($_POST['submit'])) {
-// pobranie danych z formularza
-        $id = $_POST['id'];
-        $nazwa = $_POST['nazwa'];
-        $matka = $_POST['matka'];
-
-        if(empty($nazwa) || !is_numeric($id)){
-            $message[] = 'Wszystkie pola są wymagane';
-        }
-        else{
-            // zapytanie SQL edytujące stronę o podanym id
-            $query = "UPDATE category_list SET nazwa='$nazwa', matka='$matka' WHERE id='$id' LIMIT 1";
+            $query = "INSERT INTO category_list SET id=NULL, nazwa = '$nazwa', matka = '$matka'";
             mysqli_query($link, $query) or die(mysqli_error($link));
+            $message[] = 'Kategoria została dodana';
         }
+        PokazKomunikat($message);
     }
     $_POST['id'] = null;
     $_POST['nazwa'] = null;
     $_POST['matka'] = null;
-    $_POST['submit'] = null;
 
-// wyświetlenie wiadomości jeśli została ustawiona
-    if(isset($message)){
-        foreach($message as $message){
-            echo '
-      <div class="message">
-         <span>'.$message.'</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-      </div>
-      ';
-        }
-    }
+
     echo $form;
+
 }
 
 // funkcja usuwająca kategorie o podanym id
@@ -337,13 +241,14 @@ function GenerujDrzewoKategorii() {
         $id = $row['id'];
         $nazwaKategori = $row['nazwa'];
 //        $drzewo .= "<h2>Kategoria: $nazwaKategori</h2>";
-        $drzewo .= '<p style="size: 1rem; background-color: chocolate; color: #1a1201">Kategoria: '.$nazwaKategori.'<br />'.'</p>';
+        $drzewo .= '<p style="size: 1rem; background-color: chocolate; color: #1a1201">Id: '.$id.'.Kategoria: '.$nazwaKategori.'<br />'.'</p>';
 
         // pobranie podkategorii dla danej matki
-        $podkategorie = mysqli_query($link, "SELECT nazwa FROM category_list where matka = '$id'");
-        while($row = mysqli_fetch_array($podkategorie)) {
-            $sub_name = $row['nazwa'];
-            $drzewo .= '<p style="size: 0.5rem; background-color: navajowhite;color: #652c00">Podkategoria: '.$sub_name.'<br />'.'</p>';
+        $podkategorie = mysqli_query($link, "SELECT * FROM category_list where matka = '$id'");
+        while($row2 = mysqli_fetch_array($podkategorie)) {
+            $sub_name = $row2['nazwa'];
+            $id_subcat = $row2['id'];
+            $drzewo .= '<p style="size: 0.5rem; background-color: navajowhite;color: #652c00">Id: '.$id_subcat.'.Podkategoria: '.$sub_name.'<br />'.'</p>';
         }
     }
     echo $drzewo;

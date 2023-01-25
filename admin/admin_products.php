@@ -2,7 +2,7 @@
 
 include '../cfg.php';
 include 'admin.php';
-
+require_once 'classes/Product.php';
 session_start();
 
 $admin_id = $_SESSION['admin_id'];
@@ -11,12 +11,10 @@ if(!isset($admin_id)){
     header('location:login.php');
 }
 
-if(isset($_GET['delete'])){
-    $delete_id = $_GET['delete'];
-    mysqli_query($link, "DELETE FROM `users` WHERE id = '$delete_id'") or die('query failed');
-    header('location:admin_users.php');
-}
+global $link;
 
+$product = new Product($link);
+$product->usunProdukt();
 ?>
 
 <!DOCTYPE html>
@@ -25,58 +23,68 @@ if(isset($_GET['delete'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katgeorie</title>
+    <title>Produkty</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_style.css">
-
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css"
+            rel="stylesheet"
+    />
 </head>
-<header class="header">
-
-    <div class="flex">
-
-        <a href="admin_page.php" class="logo">Admin<span>Panel</span></a>
-
-        <nav class="navbar">
-            <a style="color: khaki" href="admin_page.php">Główna</a>
-            <a style="color: khaki" href="admin_users.php">Użytkownicy</a>
-            <a style="color: khaki" href="admin_pages.php">Strony</a>
-            <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="admin_categories.php">Kategorie</a>
-        </nav>
-
-        <div>
-            <p>username : <span><?php echo $_SESSION['admin_name']; ?></span></p>
-            <p>email : <span><?php echo $_SESSION['admin_email']; ?></span></p>
-            <a href="../logout.php" class="delete-btn">logout</a>
-            <div>new <a href="../login.php">login</a> | <a href="../register.php">register</a></div>
-        </div>
-
-    </div>
-
-</header>
 <body>
-<section class="dashboard">
+<?php
+include "admin_header.php";
+?>
+<h1 class="title text-dark">Produkty</h1>
+<div class="container-sm">
+    <a href="products/add_product.php"><button type="button" class="white-btn mb-3">Dodaj nowy produkt</button></a>
+    <table  class="table  table-bordered border-dark align-middle text-center">
+        <thead class="bg-light h-100">
+        <tr style="font-size: 20px;color: chocolate;" class="table-warning">
+            <th>Zdjęcie</th>
+            <th>ID</th>
+            <th>Tytuł</th>
+            <th>Opis</th>
+            <th>Data utworzenia</th>
+            <th>Cena</th>
+            <th>Ilość</th>
+            <th>Status</th>
+            <th>Edycja</th>
+            <th>Usuwanie</th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
+        <?php
+        $query = "SELECT * FROM product_list LIMIT 30";
+        $result = mysqli_query($link, $query);
 
-    <h1 class="title">Produkty</h1>
+        while($row = mysqli_fetch_array($result)) {
+            $id_category = $row['id'] - 1;
+            echo '<tr class="table-warning">';
+            echo '<td><img width="50%" height="50%" class="image" src="../images/'.$row['zdjecie'].'"'.'/></td>';
+            echo '<td><p style="font-size: 20px;">'. $row['id'] . '</p></td>';
+            echo '<td><p style="font-size: 20px;" class="fw-normal mb-1">'. $row['tytul'] . '</p></td>';
+            echo '<td><p style="font-size: 20px;" class="fw-normal mb-1">'. $row['opis'] . '</p></td>';
+            echo '<td><p style="font-size: 20px;" class="fw-normal mb-1">'. $row['data_utworzenia'] . '</p></td>';
+            echo '<td><p style="font-size: 20px;" class="fw-normal mb-1">'. $row['cena_netto'] . '</p></td>';
+            echo '<td><p style="font-size: 20px;" class="fw-normal mb-1">'. $row['ilosc'] . '</p></td>';
+            if($row['status_dostepnosci'] == 1){
+                echo '<td><span style="font-size: 20px;color: green" >DOSTĘPNY</span></td>';
+            }
+            else
+            {
+                echo '<td><span style="font-size: 20px;color: red">NIEDOSTĘPNY</span></td>';
+            }
+            echo '<td><a class="option-btn" href="products/edit_product.php?edit='.$row['id'].'" >EDYTUJ</a></td>';
+            echo '<td><a class="delete-btn" href="admin_products.php?delete='.$row['id'].'" onclick="return confirm(`Usunąć ten produkt?`);">USUŃ</a></td>';
+            echo '</tr>';
+        }
+        ?>
+        </tbody>
+    </table>
+</div>
 
-    <div class="box-container">
-        <div class="box">
-            <p><a href="products/product_list.php">Lista produktów</a></p>
-        </div>
-        <div class="box">
-            <p><a href="products/add_product.php">Dodaj produkt</a></p>
-        </div>
-        <div class="box">
-            <p><a href="products/edit_product.php">Edytuj produkt</a></p>
-        </div>
-        <div class="box">
-            <p><a href="products/delete_product.php">Usuń produkt</a></p>
-        </div>
-    </div>
-
-
-
-    <script src="js/admin_script.js"></script>
-
+</div>
+<script src="js/admin_script.js"></script>
 </body>
 </html>

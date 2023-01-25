@@ -10,6 +10,35 @@ $admin_id = $_SESSION['admin_id'];
 if(!isset($admin_id)){
     header('location:../login.php');
 }
+// sprawdzenie czy została ustawiona zmienna GET i przypisanie jej do pola id
+if(isset($_GET['edit']))
+{
+    $id = $_GET['edit'];
+}
+
+$query = "SELECT * FROM category_list WHERE id='$id'";
+$result = mysqli_query($link, $query);
+
+while($row = mysqli_fetch_array($result)){
+    $matka=$row['matka'];
+    $nazwa=$row['nazwa'];
+
+}
+
+//  sprawdzenie czy formularz został wysłany
+if(isset($_POST['edit_submit'])) {
+// pobranie danych z formularza
+    $matka = $_POST['matka'];
+    $nazwa = $_POST['nazwa'];
+
+    // zapytanie SQL edytujące stronę o podanym id
+    $query = "UPDATE category_list SET nazwa='$nazwa', matka='$matka' WHERE id='$id' LIMIT 1";
+    mysqli_query($link, $query) or die(mysqli_error($link));
+    $message[] = 'Udana edycja';
+
+// wyświetlenie wiadomości jeśli została ustawiona
+    PokazKomunikat($message);
+}
 
 ?>
 
@@ -24,46 +53,28 @@ if(!isset($admin_id)){
     <link rel="stylesheet" href="../../css/admin_style.css">
 
 </head>
-<header class="header">
-
-    <div class="flex">
-
-        <a href="../admin_page.php" class="logo">Admin<span>Panel</span></a>
-
-        <nav class="navbar">
-            <a style="color: khaki" href="../admin_page.php">Główna</a>
-            <a style="color: khaki" href="../admin_users.php">Użytkownicy</a>
-            <a style="color: khaki" href="../admin_pages.php">Strony</a>
-            <a style="color: khaki" href="admin_products.php">Produkty</a>
-            <a style="color: khaki" href="../admin_categories.php">Kategorie</a>
-        </nav>
-
-        <br>
-        <div>
-            <p>username : <?php echo $_SESSION['admin_name']; ?></p>
-            <p>email : <?php echo $_SESSION['admin_email']; ?></p>
-            <a href="../../logout.php" class="delete-btn">Wyloguj</a>
-            <div>new <a href="../../login.php">login</a> | <a href="../../register.php">register</a></div>
-        </div>
-
-    </div>
-
-    </div>
-
-</header>
 <body>
-
+<?php
+include "../pages_header.html";
+?>
 <section class="dashboard">
 
     <h1 class="title">Edycja kategorii</h1>
-
+    <a href="../admin_categories.php" class="white-btn">Wstecz</a>
     <div class="box-container">
 
         <div class="box">
-            <?php
-            EdytujKategorie();
-            ?>
+            <form action="" method="post">
+                <p style="size: 1rem">Nazwa kategorii:</p><br>
+                <input type="text" name="nazwa" id="nazwa" value=<?php echo $nazwa ?> required>
+
+                <p style="size: 1rem">Matka podkategorii:</p><br>
+                <input type="text" name="matka" id="matka" value=<?php echo $matka ?>><br>
+
+                <input class="white-btn" type="submit" name="edit_submit" value="Zapisz">
+            </form>
         </div>
     </div>
 </section>
+
 </body>

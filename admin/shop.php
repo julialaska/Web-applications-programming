@@ -80,7 +80,7 @@ if(isset($message)){
                     <input type="hidden" name="product_name" value="<?php echo $row['tytul']; ?>">
                     <input type="hidden" name="product_price" value="<?php echo $row['cena_netto']; ?>">
                     <input type="hidden" name="product_image" value="<?php echo $row['zdjecie']; ?>">
-                    <input type="submit" value="add to cart" name="add_to_cart" class="btn">
+                    <input type="submit" value="Dodaj do koszyka" name="add_to_cart" class="btn">
                 </form>
                 <?php
             }

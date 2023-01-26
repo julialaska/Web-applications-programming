@@ -2,6 +2,15 @@
 
 include 'cfg.php';
 include 'contact.php';
+include 'admin/admin.php';
+
+require 'includes/PHPMailer.php';
+require 'includes/SMTP.php';
+require 'includes/Exception.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 session_start();
 
@@ -11,22 +20,59 @@ if(!isset($user_id)){
     header('location:login.php');
 }
 
-if(isset($_POST['send'])){
+include('cfg.php');
 
-    $name = mysqli_real_escape_string($link, $_POST['name']);
-    $email = mysqli_real_escape_string($link, $_POST['email']);
-    $number = $_POST['number'];
-    $msg = mysqli_real_escape_string($link, $_POST['message']);
+if (isset($_POST['email'])) {
 
-    $select_message = mysqli_query($link, "SELECT * FROM `message` WHERE name = '$name' AND email = '$email' AND number = '$number' AND message = '$msg'") or die('query failed');
+    //pobieranie danych z formularza
+    $email = $_POST['email'];
 
-    if(mysqli_num_rows($select_message) > 0){
-        $message[] = 'message sent already!';
-    }else{
-        mysqli_query($link, "INSERT INTO `message`(user_id, name, email, number, message) VALUES('$user_id', '$name', '$email', '$number', '$msg')") or die('query failed');
-        $message[] = 'message sent successfully!';
+
+    // sprawdzenie czy podany mail jest równy mailowi z pliku cfg
+    if ($email == $admin_email) {
+        $pass = $admin_pass;
+
+        //temat i wiadomosc
+        $subject = "Przypomnienie hasła";
+        $message = "Twoje hasło to: " . $pass;
+
+        //wysyłamy email
+
+        //instancja klasy PHPMailer
+        $mail = new PHPMailer();
+        $mail->CharSet = "UTF-8";
+        //ustawienie mailera na SMTP
+        $mail->isSMTP();
+        //zdefiniowanie smtp hostu
+        $mail->Host = "smtp.gmail.com";
+        //autentykacja
+        $mail->SMTPAuth = true;
+        //zakodowanie (ssl/tls)
+        $mail->SMTPSecure = "tls";
+        //port do połączenia
+        $mail->Port = "587";
+        //ustawienie użytkownika
+        $mail->Username = "julkalas101@gmail.com";
+        //ustawienie hasła z gmaila
+        $mail->Password = "eemgsqdamzwmscpd";
+        //temat emaila
+        $mail->Subject = "Przypomnienie hasło";
+        //ustawienie wysyłającego
+        $mail->setFrom($email);
+        $mail->addAddress($email, 'Joe User');
+        $mail->isHTML(true);
+
+        //Email treść
+        $subject = "Przypomnienie hasła";
+        $message = "Twoje hasło to: " . $pass;
+        $mail->Body = "<h1>" . $subject . "</h1></br><p>" . $message . "</p>";
+        //dodanie odbiorcy
+        $mail->addAddress('con');
+        //wysłanie maila
+        $mail->send();
+        //zamknięcie polączenie smtp
+        $mail->smtpClose();
     }
-
 }
 
 ?>
@@ -79,10 +125,19 @@ if(isset($_POST['send'])){
 
 </header>
 <body>
+<div class="heading">
+    <h3>Przypomnij hasło</h3>
+</div>
 
-<?php
-    PrzypomnijHaslo();
-?>
+<section class="contact">
+
+    <form method="post" enctype="multipart/form-data">
+        <h3>przypomnij haslo</h3>
+        <input type="email" name="email" required placeholder="Email" class="box">
+        <input type="submit" value="Wyślij wiadomosc" name="send" class="btn">
+    </form>
+
+</section>
 
 </body>
 

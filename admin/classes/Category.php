@@ -35,17 +35,17 @@ class Category {
     public function usunKategorie(){
         if(isset($_GET['delete'])){
             $id = $_GET['delete'];
-//  sprawdzenie, czy rekord o danym id istnieje w bazie danych
+            //  sprawdzenie, czy rekord o danym id istnieje w bazie danych
             $query = "SELECT * FROM category_list WHERE id = '$id'";
             $result = mysqli_query($this->link, $query);
-//  sprawdzenie liczby wyników, jeśli ich liczba jest większa niż zero, rekord istnieje i zostaje usunięty z bazy
+            //  sprawdzenie liczby wyników, jeśli ich liczba jest większa niż zero, rekord istnieje i zostaje usunięty z bazy
             if (mysqli_num_rows($result) <= 0) {
                 $message[] = 'Kategoria o podanym id nie istnieje';
             }
             else {
                 $query = "DELETE FROM category_list WHERE id = '$id'";
                 mysqli_query($this->link, $query);
-// po usunięciu link przekierowujący z powrotem na podgląd podstron
+            // po usunięciu link przekierowujący z powrotem na podgląd podstron
                 header('location:admin_categories.php');
                 $message[] = 'Udane usuwanie';
             }

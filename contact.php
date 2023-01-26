@@ -59,7 +59,7 @@ function FormularzHaslo()
         
         <section class="contact">
         
-           <form action="mailto:julkalas101@gmail.com" method="post" enctype="text/plain">
+           <form method="post" enctype="multipart/form-data">
               <h3>przypomnij haslo</h3>
               <input type="email" name="email" required placeholder="Email" class="box">
               <input type="submit" value="Wyślij wiadomosc" name="send" class="btn">

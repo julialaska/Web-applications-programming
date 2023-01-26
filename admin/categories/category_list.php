@@ -32,7 +32,7 @@ include "../pages_header.html";
 <section class="dashboard">
 
     <h1 class="title">Wyświetlanie kategorii</h1>
-    <a href="../admin_products.php" class="white-btn">Wstecz</a>
+    <a href="../admin_categories.php" class="white-btn">Wstecz</a>
     <div class="box-container">
         <script src="jquery.js"></script>
         <script src="jquery.jstree.js"></script>

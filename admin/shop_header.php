@@ -26,9 +26,9 @@
             </div>
 
             <div class="user-box">
-                <p>username : <span><?php echo $_SESSION['user_name']; ?></span></p>
-                <p>email : <span><?php echo $_SESSION['user_email']; ?></span></p>
-                <a href="../logout.php" class="delete-btn">Wyloguj</a>
+                <p>Nazwa użytkownika : <span><?php echo $_SESSION['user_name']; ?></span></p>
+                <p>Email : <span><?php echo $_SESSION['user_email']; ?></span></p>
+                <a href="logout.php" class="delete-btn">Wyloguj</a>
             </div>
         </div>
     </div>

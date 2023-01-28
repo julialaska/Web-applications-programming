@@ -54,7 +54,7 @@ if (isset($_POST['email'])) {
         //ustawienie użytkownika
         $mail->Username = "julkalas101@gmail.com";
         //ustawienie hasła z gmaila
-        $mail->Password = "eemgsqdamzwmscpd";
+        $mail->Password = "************";
         //temat emaila
         $mail->Subject = "Przypomnienie hasło";
         //ustawienie wysyłającego
